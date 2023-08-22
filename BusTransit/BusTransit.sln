@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusTransit.Shared", "BusTransit.Shared\BusTransit.Shared.csproj", "{A34F25B3-0FB4-46D9-8307-38F6E70906D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusTransit.Consumer", "BusTransit.Consumer\BusTransit.Consumer.csproj", "{A814B9AB-BE48-44C4-AD01-8B8AD9EE366A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusTransit.Publisher", "BusTransit.Publisher\BusTransit.Publisher.csproj", "{81AAE973-FC85-442C-8F7D-EFD3D42BEEA5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A34F25B3-0FB4-46D9-8307-38F6E70906D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A34F25B3-0FB4-46D9-8307-38F6E70906D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A34F25B3-0FB4-46D9-8307-38F6E70906D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A34F25B3-0FB4-46D9-8307-38F6E70906D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A814B9AB-BE48-44C4-AD01-8B8AD9EE366A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A814B9AB-BE48-44C4-AD01-8B8AD9EE366A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A814B9AB-BE48-44C4-AD01-8B8AD9EE366A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A814B9AB-BE48-44C4-AD01-8B8AD9EE366A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81AAE973-FC85-442C-8F7D-EFD3D42BEEA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81AAE973-FC85-442C-8F7D-EFD3D42BEEA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81AAE973-FC85-442C-8F7D-EFD3D42BEEA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81AAE973-FC85-442C-8F7D-EFD3D42BEEA5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
