@@ -1,14 +1,14 @@
-﻿using BusTransit.Shared;
+﻿using System.Security.Cryptography;
+using BusTransit.Shared;
 using MassTransit;
-using Bus = BusTransit.Shared.Bus;
 
 namespace BusTransit.Publisher;
 
 public class Publisher : BackgroundService
 {
     private readonly ILogger<Publisher> _logger;
-    readonly IBus _bus;
-    
+    private readonly IBus _bus;
+
     public Publisher(ILogger<Publisher> logger, IBus bus)
     {
         _logger = logger;
@@ -19,17 +19,38 @@ public class Publisher : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            //await Task.Yield();
-            
-            Console.Write("Enter the bus number>> ");
-            var busNumber = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(busNumber))
+            await Task.Delay(1000, stoppingToken);
+            // Console.Write("Enter the bus number>> ");
+            // var busNumber = int.Parse(Console.ReadLine());
+            var random = new Random();
+            var busNumber = random.Next(101);
+            if (busNumber<=50)
             {
-                var bus = new Bus(Id: Guid.NewGuid(), Number: busNumber);
-                _logger.LogInformation("The bus({}) has been dispatched", bus.ToString());
-                await _bus.Publish(bus, stoppingToken);
+                var firstBus = new MyMessage()
+                {
+                    Id = Guid.NewGuid(),
+                    Number = busNumber,
+                    
+                };
+                _logger.LogInformation("The bus({}) has been dispatched", firstBus.Number);
+                await _bus.Publish(firstBus, context =>
+                {
+                    context.SetRoutingKey("key.first");
+                }, cancellationToken: stoppingToken);
             }
-            
+            else
+            {
+                var secondBus = new MyMessage
+                {
+                    Id = Guid.NewGuid(),
+                    Number = busNumber
+                };
+                _logger.LogInformation("The bus({}) has been dispatched",  secondBus.Number);
+                await _bus.Publish(secondBus, context =>
+                {
+                    context.SetRoutingKey("key.second");
+                }, cancellationToken: stoppingToken);
+            }
         }
     }
 }

@@ -1,18 +1,22 @@
 using BusTransit.Publisher;
+using BusTransit.Shared;
 using MassTransit;
-using Bus = BusTransit.Shared.Bus;
+using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMassTransit(x =>
 {
-    x.SetKebabCaseEndpointNameFormatter();
-
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host("localhost", "/", h =>
         {
             h.Username("guest");
             h.Password("guest");
+        });
+        
+        cfg.Publish<MyMessage>(publishConfig =>
+        {
+            publishConfig.ExchangeType = "topic";
         });
     });
 });

@@ -1,18 +1,13 @@
 using BusTransit.Consumer;
+using BusTransit.Shared;
 using MassTransit;
+using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder();
 builder.Services.AddMassTransit(x =>
 {
-    x.SetKebabCaseEndpointNameFormatter();
-    x.SetInMemorySagaRepositoryProvider();
-
-    var assembly = typeof(Program).Assembly;
-
-    x.AddConsumers(assembly);
-    x.AddSagaStateMachines(assembly);
-    x.AddSagas(assembly);
-    x.AddActivities(assembly);
+    x.AddConsumer<FirstConsumer>();
+    x.AddConsumer<SecondConsumer>();
 
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -21,7 +16,31 @@ builder.Services.AddMassTransit(x =>
             h.Username("guest");
             h.Password("guest");
         });
-        cfg.ReceiveEndpoint("queue-test", e => e.ConfigureConsumer<Consumer>(context));
+        
+        
+        // Підключення FirstConsumer до першого routing key
+        cfg.ReceiveEndpoint("queue.first", e =>
+        {
+            e.ConfigureConsumeTopology = false; // Вимикаємо автоматичну топологію
+            e.Bind<MyMessage>(s =>
+            {
+                s.RoutingKey = "key.first"; 
+                s.ExchangeType = ExchangeType.Topic;
+            });
+            e.ConfigureConsumer<FirstConsumer>(context);
+        });
+
+        // Підключення SecondConsumer до іншого routing key
+        cfg.ReceiveEndpoint("queue.second", e =>
+        {
+            e.ConfigureConsumeTopology = false;
+            e.Bind<MyMessage>( s =>
+            {
+                s.RoutingKey = "key.second"; // Прив'язуємо інший routing key
+                s.ExchangeType = ExchangeType.Topic;
+            });
+            e.ConfigureConsumer<SecondConsumer>(context);
+        });
     });
 });
 
