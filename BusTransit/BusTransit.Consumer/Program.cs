@@ -1,5 +1,4 @@
 using BusTransit.Consumer;
-using BusTransit.Shared;
 using MassTransit;
 using RabbitMQ.Client;
 
@@ -17,29 +16,26 @@ builder.Services.AddMassTransit(x =>
             h.Password("guest");
         });
         
-        
-        // Підключення FirstConsumer до першого routing key
-        cfg.ReceiveEndpoint("queue.first", e =>
+        cfg.ReceiveEndpoint("priority-orders", x =>
         {
-            e.ConfigureConsumeTopology = false; // Вимикаємо автоматичну топологію
-            e.Bind<MyMessage>(s =>
+            x.ConfigureConsumeTopology = false; 
+            x.Bind("submitorder", s => 
             {
-                s.RoutingKey = "key.first"; 
-                s.ExchangeType = ExchangeType.Topic;
+                s.RoutingKey = "PRIORITY";
+                s.ExchangeType = ExchangeType.Direct;
             });
-            e.ConfigureConsumer<FirstConsumer>(context);
+            x.ConfigureConsumer<FirstConsumer>(context);
         });
 
-        // Підключення SecondConsumer до іншого routing key
-        cfg.ReceiveEndpoint("queue.second", e =>
+        cfg.ReceiveEndpoint("regular-orders", x =>
         {
-            e.ConfigureConsumeTopology = false;
-            e.Bind<MyMessage>( s =>
+            x.ConfigureConsumeTopology = false; 
+            x.Bind("submitorder", s => 
             {
-                s.RoutingKey = "key.second"; // Прив'язуємо інший routing key
-                s.ExchangeType = ExchangeType.Topic;
+                s.RoutingKey = "REGULAR";
+                s.ExchangeType = ExchangeType.Direct;
             });
-            e.ConfigureConsumer<SecondConsumer>(context);
+            x.ConfigureConsumer<SecondConsumer>(context);
         });
     });
 });

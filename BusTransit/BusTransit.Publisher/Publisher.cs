@@ -20,36 +20,31 @@ public class Publisher : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             await Task.Delay(1000, stoppingToken);
-            // Console.Write("Enter the bus number>> ");
-            // var busNumber = int.Parse(Console.ReadLine());
-            var random = new Random();
-            var busNumber = random.Next(101);
+            Console.Write("Enter the bus number>> ");
+            var busNumber = int.Parse(Console.ReadLine());
+            // var random = new Random();
+            // var busNumber = random.Next(101);
             if (busNumber<=50)
             {
                 var firstBus = new MyMessage()
                 {
                     Id = Guid.NewGuid(),
                     Number = busNumber,
-                    
+                    CustomerType = "PRIORITY"
                 };
                 _logger.LogInformation("The bus({}) has been dispatched", firstBus.Number);
-                await _bus.Publish(firstBus, context =>
-                {
-                    context.SetRoutingKey("key.first");
-                }, cancellationToken: stoppingToken);
+                await _bus.Publish(firstBus, cancellationToken: stoppingToken);
             }
             else
             {
                 var secondBus = new MyMessage
                 {
                     Id = Guid.NewGuid(),
-                    Number = busNumber
+                    Number = busNumber,
+                    CustomerType = "REGULAR"
                 };
                 _logger.LogInformation("The bus({}) has been dispatched",  secondBus.Number);
-                await _bus.Publish(secondBus, context =>
-                {
-                    context.SetRoutingKey("key.second");
-                }, cancellationToken: stoppingToken);
+                await _bus.Publish(secondBus, cancellationToken: stoppingToken);
             }
         }
     }

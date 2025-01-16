@@ -14,10 +14,16 @@ builder.Services.AddMassTransit(x =>
             h.Password("guest");
         });
         
-        cfg.Publish<MyMessage>(publishConfig =>
+        cfg.Send<MyMessage>(x =>
         {
-            publishConfig.ExchangeType = "topic";
+            // use customerType for the routing key
+            x.UseRoutingKeyFormatter(context => context.Message.CustomerType);
         });
+        
+        cfg.Message<MyMessage>(x => x.SetEntityName("submitorder"));
+
+
+        cfg.Publish<MyMessage>(x => x.ExchangeType = ExchangeType.Direct);
     });
 });
 

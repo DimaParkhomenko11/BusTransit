@@ -12,7 +12,7 @@ public class SecondConsumer : IConsumer<MyMessage>
 
     public Task Consume(ConsumeContext<MyMessage> context)
     {
-        _logger.LogInformation("The bus({}) has been arrived in second consumer", context.Message.Number );
+        _logger.LogInformation($"The bus({context.Message.Number}) has been arrived in second consumer. CustomerType = {context.Message.CustomerType}");
         return Task.CompletedTask;
     }
 }
