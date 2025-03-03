@@ -7,12 +7,12 @@ namespace BusTransit.Publisher;
 public class Publisher : BackgroundService
 {
     private readonly ILogger<Publisher> _logger;
-    private readonly IBus _bus;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public Publisher(ILogger<Publisher> logger, IBus bus)
+    public Publisher(ILogger<Publisher> logger, IPublishEndpoint publishEndpoint)
     {
         _logger = logger;
-        _bus = bus;
+        _publishEndpoint = publishEndpoint;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -33,7 +33,7 @@ public class Publisher : BackgroundService
                     CustomerType = "PRIORITY"
                 };
                 _logger.LogInformation("The bus({}) has been dispatched", firstBus.Number);
-                await _bus.Publish(firstBus, cancellationToken: stoppingToken);
+                await _publishEndpoint.Publish(firstBus, cancellationToken: stoppingToken);
             }
             else
             {
@@ -44,7 +44,7 @@ public class Publisher : BackgroundService
                     CustomerType = "REGULAR"
                 };
                 _logger.LogInformation("The bus({}) has been dispatched",  secondBus.Number);
-                await _bus.Publish(secondBus, cancellationToken: stoppingToken);
+                await _publishEndpoint.Publish(secondBus, cancellationToken: stoppingToken);
             }
         }
     }
